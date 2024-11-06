@@ -9,10 +9,25 @@
 #define SIZE 50
 //file data memiliki 100 entitas, jika ingin menggunakan semua ubah SIZE menjadi 100
 
-struct mahasiswa {
+class mahasiswa {
+public:
     std::string nama;
     std::string nim;    
     float ipk;
+
+    bool lulus() {
+        if (ipk < 2.75) return false;
+        return true;
+    }
+
+    void tampilkanInfo() {
+        std::string namaSingkat = nama.length() > 30 ? nama.substr(0, 27) + "..." : nama;
+        std::string status = lulus() ? "Lulus" : "Tidak Lulus";
+        std::cout << "| " << std::setw(31) << std::left << namaSingkat
+            << "| " << std::setw(22) << nim
+            << "| " << std::setw(5) << ipk
+            << " | " << std::setw(14) << status << " |" << std::endl;
+    }
 };
 
 mahasiswa data[SIZE];
@@ -21,8 +36,7 @@ void menerimaInput(mahasiswa(&data)[SIZE]);
 bool stringValid(std::string s);
 bool NIMValid(std::string s);
 bool ipkValid(std::string ip);
-void tampilkanInfo(mahasiswa(&data)[SIZE]);
-bool lulus(mahasiswa m);
+void cetakTabel(mahasiswa(&data)[SIZE]);
 void printLine(mahasiswa &cetak);
 void menerimaInputDariFile(mahasiswa(&data)[SIZE], const std::string& filename);
 
@@ -36,8 +50,8 @@ int main() {
     menerimaInputDariFile(data, "data.csv");
     //isi file data.csv : nama,nim,ipk (100 entitas)
 
-    std::cout << "--------------------------------DATA KELULUSAN MAHASISWA---------------------------\n";        
-    tampilkanInfo(data);
+    std::cout << "-------------------------------DATA KELULUSAN MAHASISWA----------------------------\n";        
+    cetakTabel(data);
 
     std::cout << "\n\n";
     return 0;
@@ -142,31 +156,16 @@ bool ipkValid(std::string ip) {
     }
 }
 
-void tampilkanInfo(mahasiswa(&data)[SIZE]) {
+void cetakTabel(mahasiswa(&data)[SIZE]) {
     std::cout << "+--------------------------------+-----------------------+-------+----------------+" << std::endl;
     std::cout << "| Nama                           | NIM                   |  IPK  |  Status        |" << std::endl;
     std::cout << "+--------------------------------+-----------------------+-------+----------------+" << std::endl;
 
     for (auto& cetak : data) {
-        printLine(cetak);
+        cetak.tampilkanInfo();
     }
 
     std::cout << "+--------------------------------+-----------------------+-------+----------------+" << std::endl;
-}
-
-
-bool lulus(mahasiswa m) {
-    if (m.ipk < 2.75) return false;
-    return true;
-}
-
-void printLine(mahasiswa& cetak) {
-    std::string namaSingkat = cetak.nama.length() > 30 ? cetak.nama.substr(0, 27) + "..." : cetak.nama;
-    std::string status = lulus(cetak) ? "Lulus" : "Tidak Lulus";
-    std::cout << "| " << std::setw(31) << std::left << namaSingkat
-        << "| " << std::setw(22) << cetak.nim
-        << "| " << std::setw(5) << cetak.ipk
-        << " | " << std::setw(14) << status << " |" << std::endl;
 }
 
 void menerimaInputDariFile(mahasiswa(&data)[SIZE], const std::string& filename) {
