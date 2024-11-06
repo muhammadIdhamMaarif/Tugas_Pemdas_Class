@@ -21,7 +21,7 @@ void menerimaInput(mahasiswa(&data)[SIZE]);
 bool stringValid(std::string s);
 bool NIMValid(std::string s);
 bool ipkValid(std::string ip);
-void tampilkanInfo(mahasiswa(&data)[SIZE], bool filterLulus = false);
+void tampilkanInfo(mahasiswa(&data)[SIZE]);
 bool lulus(mahasiswa m);
 void printLine(mahasiswa &cetak);
 void menerimaInputDariFile(mahasiswa(&data)[SIZE], const std::string& filename);
@@ -32,15 +32,15 @@ int main() {
 
     //menerimaInput(data);
     //menerimaInput untuk memasukkan input secara manual
+
     menerimaInputDariFile(data, "data.csv");
     //isi file data.csv : nama,nim,ipk (100 entitas)
-    std::cout << "-------------------------DATA SEMUA MAHASISWA---------------------\n";    
-    tampilkanInfo(data);
-    std::cout << "\n\n";
-    std::cout << "-------------------------DATA MAHASISWA LULUS---------------------\n";    
-    tampilkanInfo(data, true);
-    std::cout << "\n\n";    
 
+    std::cout << "--------------------------------DATA KELULUSAN MAHASISWA---------------------------\n";        
+    tampilkanInfo(data);
+
+    std::cout << "\n\n";
+    return 0;
 }
 
 void menerimaInput(mahasiswa(&data)[SIZE]) {
@@ -142,35 +142,31 @@ bool ipkValid(std::string ip) {
     }
 }
 
-void tampilkanInfo(mahasiswa(&data)[SIZE], bool filterLulus) {
-    std::cout << "+--------------------------------+-----------------------+-------+" << std::endl;
-    std::cout << "| Nama                           | NIM                   |  IPK  |" << std::endl;
-    std::cout << "+--------------------------------+-----------------------+-------+" << std::endl;
+void tampilkanInfo(mahasiswa(&data)[SIZE]) {
+    std::cout << "+--------------------------------+-----------------------+-------+----------------+" << std::endl;
+    std::cout << "| Nama                           | NIM                   |  IPK  |  Status        |" << std::endl;
+    std::cout << "+--------------------------------+-----------------------+-------+----------------+" << std::endl;
 
     for (auto& cetak : data) {
-        if (filterLulus) {
-            if (lulus(cetak)) {
-                printLine(cetak);
-            }
-        }
-        else {
-            printLine(cetak);
-        }
+        printLine(cetak);
     }
 
-    std::cout << "+--------------------------------+-----------------------+-------+" << std::endl;
+    std::cout << "+--------------------------------+-----------------------+-------+----------------+" << std::endl;
 }
+
 
 bool lulus(mahasiswa m) {
     if (m.ipk < 2.75) return false;
     return true;
 }
 
-void printLine(mahasiswa &cetak) {
+void printLine(mahasiswa& cetak) {
     std::string namaSingkat = cetak.nama.length() > 30 ? cetak.nama.substr(0, 27) + "..." : cetak.nama;
+    std::string status = lulus(cetak) ? "Lulus" : "Tidak Lulus";
     std::cout << "| " << std::setw(31) << std::left << namaSingkat
         << "| " << std::setw(22) << cetak.nim
-        << "| " << std::setw(5) << cetak.ipk << " |" << std::endl;
+        << "| " << std::setw(5) << cetak.ipk
+        << " | " << std::setw(14) << status << " |" << std::endl;
 }
 
 void menerimaInputDariFile(mahasiswa(&data)[SIZE], const std::string& filename) {
